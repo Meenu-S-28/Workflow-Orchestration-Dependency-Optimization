@@ -6,6 +6,7 @@ import com.example.myproject.Model.Workflow;
 import com.example.myproject.Repostiory.TaskDependencyRepository;
 import com.example.myproject.Repostiory.TaskRepository;
 import com.example.myproject.Repostiory.WorkflowRepository;
+import com.example.myproject.dto.TaskDependencyResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class TaskDependencyService {
         this.workflowRepo = workflowRepo;
     }
 
-    public TaskDependency addDependency(Long sourceTaskId, Long targetTaskId, Long workflowId) {
+    public TaskDependencyResponseDTO addDependency(Long sourceTaskId, Long targetTaskId, Long workflowId) {
 
         Workflow workflow = workflowRepo.findById(workflowId)
                 .orElseThrow(() -> new RuntimeException("Workflow not found"));
@@ -40,15 +41,33 @@ public class TaskDependencyService {
                 .orElseThrow(() -> new RuntimeException("Target task not found"));
         dependency.setTargetTask(target);
 
-//        TaskDependency dep = new TaskDependency();
-//        dep.setWorkflow(source.getWorkflow());
-//        dep.setSourceTask(source);
-//        dep.setTargetTask(target);
+        TaskDependency dep = new TaskDependency();
+        dep.setWorkflow(source.getWorkflow());
+        dep.setSourceTask(source);
+        dep.setTargetTask(target);
+        TaskDependency saved = dependencyRepo.save(dependency);
 
-        return dependencyRepo.save(dependency);
+        TaskDependencyResponseDTO dto = new TaskDependencyResponseDTO();
+        dto.setId(saved.getId());
+        dto.setSourceTask(source.getId());
+        dto.setTargetTask(target.getId());
+
+        return dto;
     }
 
-    public List<TaskDependency> getAllDependency(Long workflowId){
-        return dependencyRepo.findByWorkflowId(workflowId);
+    public List<TaskDependencyResponseDTO> getAllDependency(Long workflowId){
+        return dependencyRepo.findByWorkflowId(workflowId)
+                .stream()
+                .map(dep -> {
+                    TaskDependencyResponseDTO dto = new TaskDependencyResponseDTO();
+                    dto.setId(dep.getId());
+                    dto.setSourceTask(dep.getSourceTask().getId());
+                    dto.setTargetTask(dep.getTargetTask().getId());
+                    return dto;
+                })
+                .toList();
+
     }
+
+    public void deleteDependency(Long dependencyId){dependencyRepo.deleteById(dependencyId);}
 }

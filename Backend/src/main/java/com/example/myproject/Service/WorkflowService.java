@@ -2,6 +2,7 @@ package com.example.myproject.Service;
 
 import com.example.myproject.Model.Workflow;
 import com.example.myproject.Repostiory.WorkflowRepository;
+import com.example.myproject.dto.WorkflowUpdateDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,5 +25,27 @@ public class WorkflowService {
 
     public List<Workflow> getAllWorkflows() {
         return workflowRepo.findAll();
+    }
+
+    public Workflow getByIdWorkflows(Long Id){ return workflowRepo.findById(Id).orElseThrow();}
+
+    public void deleteWorkflows(Long Id){ workflowRepo.deleteById(Id);}
+
+    public Workflow updateWorkflows(Long Id, WorkflowUpdateDTO dto){
+        Workflow workflow = workflowRepo.findById(Id).orElseThrow();
+
+        if (dto.getId() != null){
+            workflow.setId(dto.getId());
+        }
+        if (dto.getName() != null){
+            workflow.setName(dto.getName());
+        }
+        if (dto.getDescription() != null){
+            workflow.setDescription(dto.getDescription());
+        }
+        if (dto.getStatus() != null){
+            workflow.setStatus(dto.getStatus());
+        }
+        return workflowRepo.save(workflow);
     }
 }

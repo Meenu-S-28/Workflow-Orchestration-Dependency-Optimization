@@ -19,6 +19,7 @@ public class TaskDependency {
     private Workflow workflow;
     @ManyToOne
     @JoinColumn(name = "source_task_id", nullable = false)
+
     private Task sourceTask;
     @ManyToOne
     @JoinColumn(name = "target_task_id", nullable = false)
