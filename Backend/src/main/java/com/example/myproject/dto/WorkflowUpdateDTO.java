@@ -10,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 public class WorkflowUpdateDTO {
-    private Long id;
     private String name;
     private String description;
     private Workflow.Status status;

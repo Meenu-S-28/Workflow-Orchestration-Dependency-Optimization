@@ -11,4 +11,8 @@ public interface TaskDependencyRepository
         extends JpaRepository<TaskDependency, Long> {
 
     List<TaskDependency> findByWorkflowId(Long workflowId);
+    List<TaskDependency> findByWorkflowIdAndSourceTaskId(Long workflowId, Long sourceTaskId);
+    List<TaskDependency> findByWorkflowIdAndTargetTaskId(Long workflowId, Long targetTaskId);
+//    TaskDependency findByDependencyId(Long dependencyId);
+
 }

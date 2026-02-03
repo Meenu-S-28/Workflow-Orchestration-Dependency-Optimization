@@ -9,6 +9,7 @@ import com.example.myproject.Repostiory.WorkflowRepository;
 import com.example.myproject.dto.TaskDependencyResponseDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -69,5 +70,42 @@ public class TaskDependencyService {
 
     }
 
+//    public TaskDependencyResponseDTO getByDependencyId(Long dependencyId){
+//        TaskDependencyResponseDTO dto = new TaskDependencyResponseDTO();
+//        TaskDependency dep = dependencyRepo.findByDependencyId(dependencyId);
+//        dto.setId(dep.getId());
+//        dto.setSourceTask(dep.getSourceTask().getId());
+//        dto.setTargetTask(dep.getTargetTask().getId());
+//        return dto;
+//
+//    }
+
+
     public void deleteDependency(Long dependencyId){dependencyRepo.deleteById(dependencyId);}
+
+
+
+    public List<TaskDependencyResponseDTO> getByTaskId(Long workflowId, Long taskId){
+        List<TaskDependencyResponseDTO> allDependency = new ArrayList<>();
+        allDependency.addAll(dependencyRepo.findByWorkflowIdAndTargetTaskId(workflowId, taskId).stream()
+                .map(dep -> {
+                    TaskDependencyResponseDTO dto = new TaskDependencyResponseDTO();
+                    dto.setId(dep.getId());
+                    dto.setSourceTask(dep.getSourceTask().getId());
+                    dto.setTargetTask(dep.getTargetTask().getId());
+                    return dto;
+                })
+                .toList());
+        allDependency.addAll(dependencyRepo.findByWorkflowIdAndSourceTaskId(workflowId, taskId).stream()
+                .map(dep -> {
+                    TaskDependencyResponseDTO dto = new TaskDependencyResponseDTO();
+                    dto.setId(dep.getId());
+                    dto.setSourceTask(dep.getSourceTask().getId());
+                    dto.setTargetTask(dep.getTargetTask().getId());
+                    return dto;
+                })
+                .toList());
+
+        return allDependency;
+    }
 }

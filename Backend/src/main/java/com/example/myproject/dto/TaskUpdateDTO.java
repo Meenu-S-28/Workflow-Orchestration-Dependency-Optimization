@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 public class TaskUpdateDTO {
-    private Long id;
     private String name;
     private String description;
     private Integer estimatedDuration;

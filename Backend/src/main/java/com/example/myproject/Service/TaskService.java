@@ -2,6 +2,7 @@ package com.example.myproject.Service;
 
 import com.example.myproject.Model.Task;
 import com.example.myproject.Model.Workflow;
+//import com.example.myproject.Repostiory.TaskDependencyRepository;
 import com.example.myproject.Repostiory.TaskRepository;
 import com.example.myproject.Repostiory.WorkflowRepository;
 //import com.example.myproject.dto.TaskDependencyResponseDTO;
@@ -18,7 +19,8 @@ public class TaskService {
     private final TaskRepository taskRepo;
     private final WorkflowRepository workflowRepo;
 
-    public TaskService(TaskRepository taskRepo, WorkflowRepository workflowRepo) {
+    public TaskService(TaskRepository taskRepo,
+                       WorkflowRepository workflowRepo) {
         this.taskRepo = taskRepo;
         this.workflowRepo = workflowRepo;
     }
@@ -59,9 +61,9 @@ public class TaskService {
                 .toList();
     }
 
-    public TaskResponseDTO getByTaskId(Long taskId) {
+    public TaskResponseDTO getByTaskId(Long taskId, Long workflowId) {
 
-        Task task = taskRepo.findById(taskId).orElseThrow();
+        Task task = taskRepo.findByIdAndWorkflowId(workflowId, taskId).orElseThrow();
         TaskResponseDTO dto = new TaskResponseDTO();
 
         dto.setId(task.getId());
@@ -81,15 +83,16 @@ public class TaskService {
         return dto;
     }
 
-    public void deleteTask(Long Id){ taskRepo.deleteById(Id);}
+    public void deleteTask(Long workflowId,Long Id){
+        Task task = taskRepo.findByIdAndWorkflowId(Id, workflowId)
+                .orElseThrow();
+        taskRepo.delete(task);
+    }
 
-    public TaskResponseDTO updateTasks(Long taskId, TaskUpdateDTO dto){
-        Task task = taskRepo.findById(taskId).orElseThrow();
+    public TaskResponseDTO updateTasks(Long workflowId, Long taskId, TaskUpdateDTO dto){
+        Task task = taskRepo.findByIdAndWorkflowId(taskId, workflowId).orElseThrow();
         TaskResponseDTO responseDTO = new TaskResponseDTO();
 
-        if(dto.getId() !=null){
-            task.setId(dto.getId());
-        }
         if(dto.getName() != null){
             task.setName(dto.getName());
         }
@@ -116,9 +119,11 @@ public class TaskService {
                 .stream()
                 .map(dep -> dep.getTargetTask().getId())
                 .toList());
-
+        taskRepo.save(task);
         return responseDTO;
 
     }
+
+
 
 }

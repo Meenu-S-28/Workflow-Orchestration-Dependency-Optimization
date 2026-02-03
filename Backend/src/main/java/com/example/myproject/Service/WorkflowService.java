@@ -34,9 +34,6 @@ public class WorkflowService {
     public Workflow updateWorkflows(Long Id, WorkflowUpdateDTO dto){
         Workflow workflow = workflowRepo.findById(Id).orElseThrow();
 
-        if (dto.getId() != null){
-            workflow.setId(dto.getId());
-        }
         if (dto.getName() != null){
             workflow.setName(dto.getName());
         }
