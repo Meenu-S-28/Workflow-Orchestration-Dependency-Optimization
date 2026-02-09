@@ -1,11 +1,9 @@
 package com.example.myproject.Controller;
 
-import com.example.myproject.Model.Task;
-//import com.example.myproject.Model.TaskDependency;
 import com.example.myproject.Model.Workflow;
-//import com.example.myproject.Service.TaskDependencyService;
-//import com.example.myproject.Service.TaskService;
 import com.example.myproject.Service.WorkflowService;
+import com.example.myproject.Service.WorkflowGraphService;
+import com.example.myproject.Service.WorkflowExecutionService;
 import com.example.myproject.dto.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +14,12 @@ import java.util.List;
 public class WorkflowController {
 
     private final WorkflowService workflowService;
-
-
-    public WorkflowController(WorkflowService workflowService) {
+    private final WorkflowGraphService workflowGraphService;
+    private final WorkflowExecutionService workflowExecutionService;
+    public WorkflowController(WorkflowService workflowService,WorkflowGraphService workflowGraphService,WorkflowExecutionService workflowExecutionService) {
         this.workflowService = workflowService;
+        this.workflowGraphService=workflowGraphService;
+        this.workflowExecutionService=workflowExecutionService;
     }
 
     @PostMapping
@@ -52,5 +52,14 @@ public class WorkflowController {
     public Workflow updateWorkflowsPatch(@PathVariable Long workflowId, @RequestBody WorkflowUpdateDTO dto){
         return workflowService.updateWorkflows(workflowId, dto);
     }
+    @GetMapping("/{workflowId}/execution-order")
+    public ExecutionOrderDTO getExecutionOrder(@PathVariable Long workflowId) {
+        return workflowGraphService.getExecutionOrder(workflowId);
+    }
+    @GetMapping("/{workflowId}/validate")
+    public WorkflowValidationDTO validateWorkflow(@PathVariable Long workflowId) {
+        return workflowGraphService.validateWorkflow(workflowId);
+    }
+
 
 }

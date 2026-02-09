@@ -28,11 +28,6 @@ public class TaskDependencyController {
         return taskDependencyService.getAllDependency(workflowId);
     }
 
-//    @GetMapping("/{dependencyId}")
-//    public TaskDependencyResponseDTO getByDependencyId(@PathVariable Long dependencyId){
-//        return taskDependencyService.getByDependencyId(dependencyId);
-//    }
-//    GET /api/workflows/{workflowId}/dependencies/task/{taskId}
     @GetMapping("/{taskId}")
     public List<TaskDependencyResponseDTO> getDependencyByTaskId(@PathVariable Long workflowId,
                                                                  @PathVariable Long taskId){

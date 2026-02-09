@@ -21,7 +21,7 @@ public class Workflow {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -40,7 +40,4 @@ public class Workflow {
         ACTIVE,
         ARCHIVED
     }
-
-
-    // getters and setters
 }
