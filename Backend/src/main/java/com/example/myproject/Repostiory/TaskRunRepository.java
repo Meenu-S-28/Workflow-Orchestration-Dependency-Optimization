@@ -23,6 +23,4 @@ public interface TaskRunRepository extends JpaRepository<TaskRun, Long> {
             TaskRunStatus status
     );
 
-    //  Check if any task has failed in a workflow run
-    boolean existsByWorkflowRunIdAndStatus(Long workflowRunId, TaskRunStatus status);
 }

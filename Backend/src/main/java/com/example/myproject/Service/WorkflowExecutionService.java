@@ -195,4 +195,10 @@ public class WorkflowExecutionService {
 
         return taskRun;
     }
+    public List<TaskRun> getWaitingManualTasks(Long workflowRunId) {
+        return taskRunRepo.findByWorkflowRunIdAndStatus(
+                workflowRunId,
+                TaskRun.TaskRunStatus.WAITING_FOR_USER
+        );
+    }
 }
